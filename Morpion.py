@@ -1,6 +1,7 @@
 import random
 import os
 
+
 # Définir la grille
 def creer_grille():
     return [[" " for _ in range(3)] for _ in range(3)]
@@ -141,9 +142,9 @@ def ia_jouer(grille):
     return [int(k) for k, v in pos_dic.items() if v == [i, j]][0]
 
 # Gérer le tour du joueur
-def joueur_jouer(grille):
+def joueur_jouer(grille, signe):
     while True:
-        pos = input("Entrez une position (1-9): ")
+        pos = input(f"Entrez une position (1-9) pour {signe}: ")
         if pos not in pos_dic:
             print("Position invalide. Essayez encore.")
             continue
@@ -151,7 +152,7 @@ def joueur_jouer(grille):
             print("Position déjà occupée. Essayez encore.")
             continue
         i, j = pos_dic[pos]
-        grille[i][j] = "X"
+        grille[i][j] = signe
         return int(pos)
 
 # Dictionnaire des positions
@@ -169,29 +170,55 @@ pos_dic = {
 
 def main():
     grille = creer_grille()
-    print("Bienvenue au morpion ! Vous êtes 'X', l'IA est 'O'.")
+    print("Bienvenue au morpion !")
+    mode = input("Choisissez le mode de jeu : 1 pour joueur contre joueur, 2 pour joueur contre IA: ")
+    
     afficher_grille(grille)
     
-    while True:
-        # Tour du joueur
-        pos = joueur_jouer(grille)
-        afficher_grille(grille)
-        if victoire(grille, pos, "X"):
-            print("Félicitations, vous avez gagné !")
-            break
-        if nul(grille):
-            print("Match nul !")
-            break
-        
-        # Tour de l'IA
-        pos = ia_jouer(grille)
-        afficher_grille(grille)
-        if victoire(grille, pos, "O"):
-            print("L'IA a gagné !")
-            break
-        if nul(grille):
-            print("Match nul !")
-            break
+    if mode == "1":
+        while True:
+            # Tour du joueur 1
+            pos = joueur_jouer(grille, "X")
+            afficher_grille(grille)
+            if victoire(grille, pos, "X"):
+                print("Félicitations, joueur 1 a gagné !")
+                break
+            if nul(grille):
+                print("Match nul !")
+                break
+            
+            # Tour du joueur 2
+            pos = joueur_jouer(grille, "O")
+            afficher_grille(grille)
+            if victoire(grille, pos, "O"):
+                print("Félicitations, joueur 2 a gagné !")
+                break
+            if nul(grille):
+                print("Match nul !")
+                break
+    elif mode == "2":
+        while True:
+            # Tour du joueur
+            pos = joueur_jouer(grille, "X")
+            afficher_grille(grille)
+            if victoire(grille, pos, "X"):
+                print("Félicitations, vous avez gagné !")
+                break
+            if nul(grille):
+                print("Match nul !")
+                break
+            
+            # Tour de l'IA
+            pos = ia_jouer(grille)
+            afficher_grille(grille)
+            if victoire(grille, pos, "O"):
+                print("L'IA a gagné !")
+                break
+            if nul(grille):
+                print("Match nul !")
+                break
+    else:
+        print("Mode de jeu invalide. Veuillez redémarrer le jeu et choisir un mode valide.")
 
 if __name__ == "__main__":
     main()
